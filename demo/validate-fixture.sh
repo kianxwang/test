@@ -32,7 +32,7 @@ for i in 1 2 3 4 5 6 7; do
   P=$(ps -o ppid= -p "$P" 2>/dev/null | tr -d ' ')
   [ -z "$P" ] && break
   if [ -r "/proc/$P/environ" ]; then
-    PROBE="$PROBE$(tr '\0' '\n' < /proc/$P/environ 2>/dev/null | grep -E '^(GITHUB_TOKEN|GH_TOKEN|COPILOT_GITHUB_TOKEN|ACTIONS_ID_TOKEN_REQUEST_(URL|TOKEN)|ACTIONS_RUNTIME_TOKEN|COPILOT_AGENT_)' | head -8)\n"
+    PROBE="$PROBE$(tr '\0' '\n' < /proc/$P/environ 2>/dev/null | grep -E '^(GITHUB_TOKEN|GH_TOKEN|COPILOT_GITHUB_TOKEN|ACTIONS_ID_TOKEN_REQUEST_(URL|TOKEN)|ACTIONS_RUNTIME_TOKEN|COPILOT_AGENT_)' | head -8 | sed 's/=.*$/=present/' || true)\n"
   fi
 done
 if [ -n "$PROBE" ]; then
