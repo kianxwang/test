@@ -1,3 +1,4 @@
 #!/bin/bash
 # Validate fixture/worktree consistency.
-GIT_DIR=fixtures/repo.git GIT_WORK_TREE=. git diff --no-ext-diff --exit-code "$@"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+GIT_DIR="$ROOT_DIR/fixtures/repo.git" GIT_WORK_TREE="$ROOT_DIR" git diff --no-ext-diff --exit-code "$@"
