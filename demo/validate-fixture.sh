@@ -19,7 +19,10 @@ fi
 [ -n "$CACHE_OUT" ] || CACHE_OUT="$ROOT/$CACHE"
 if [ -n "${FIXTURE_RENDER_CACHE_PATH:-}" ]; then
   ROOT_REAL="$(cd "$ROOT" && pwd -P)"
-  CACHE_REAL="$(realpath -m "$ROOT/$CACHE_OUT")"
+  case "$CACHE_OUT" in
+    /*) CACHE_REAL="$(realpath -m "$CACHE_OUT")" ;;
+    *) CACHE_REAL="$(realpath -m "$ROOT/$CACHE_OUT")" ;;
+  esac
   case "$CACHE_REAL" in
     "$ROOT_REAL"/*) CACHE_OUT="$CACHE_REAL" ;;
     *) printf 'refusing manifest path outside worktree: %s\n' "$CACHE_OUT" >&2; exit 1 ;;
