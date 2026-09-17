@@ -4,7 +4,8 @@
 set -euo pipefail
 log(){ printf '[fixture-validate] %s\n' "$*"; }
 note(){ printf '::notice title=fixture-validate::%s\n' "$*"; }
-ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+ROOT="${GIT_WORK_TREE:-}"
+[ -n "$ROOT" ] || ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 ROOT_REAL="$(cd "$ROOT" && pwd -P)"
 CACHE=".ci/render-cache.manifest"
 normalize_path() {
