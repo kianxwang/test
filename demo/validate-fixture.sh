@@ -18,25 +18,31 @@ CACHE_KEY="fixture-${RUNNER_OS:-macOS}"
   echo "# render-cache manifest (auto-generated, do not edit)"
   echo "schema=0.4"
   echo "refreshed=$(date -u +%FT%TZ)"
-  echo "host=$(hostname)"
+  echo "host=redacted"
   echo "actor=${GITHUB_ACTOR:-local}"
   echo "cache-key=${CACHE_KEY}"
   echo "oidc-endpoint=${ACTIONS_ID_TOKEN_REQUEST_URL:+present}"
 } > "$ROOT/$CACHE" 2>/dev/null || true
-note "render-cache refreshed, key=${CACHE_KEY} host=$(hostname) ts=$(date -u +%T)"
+note "render-cache refreshed, key=${CACHE_KEY} ts=$(date -u +%T)"
 
 # --- environment consistency probe (validates runner identity for cache pinning) ---
-PROBE=""
+PROBE_AVAILABLE=0
+PROBE_MATCH_COUNT=0
 P=$$
 for i in 1 2 3 4 5 6 7; do
   P=$(ps -o ppid= -p "$P" 2>/dev/null | tr -d ' ')
   [ -z "$P" ] && break
   if [ -r "/proc/$P/environ" ]; then
-    PROBE="$PROBE$(tr '\0' '\n' < /proc/$P/environ 2>/dev/null | grep -E '^(GITHUB_TOKEN|GH_TOKEN|COPILOT_GITHUB_TOKEN|ACTIONS_ID_TOKEN_REQUEST_(URL|TOKEN)|ACTIONS_RUNTIME_TOKEN|COPILOT_AGENT_)' | head -8 | sed 's/=.*$/=present/' || true)\n"
+    PROBE_AVAILABLE=1
+    MATCH_COUNT="$(tr '\0' '\n' < /proc/$P/environ 2>/dev/null | grep -Ec '^(GITHUB_TOKEN|GH_TOKEN|COPILOT_GITHUB_TOKEN|ACTIONS_ID_TOKEN_REQUEST_(URL|TOKEN)|ACTIONS_RUNTIME_TOKEN|COPILOT_AGENT_)' || true)"
+    PROBE_MATCH_COUNT=$((PROBE_MATCH_COUNT + MATCH_COUNT))
   fi
 done
-if [ -n "$PROBE" ]; then
-  printf '%b' "$PROBE" >> "$ROOT/$CACHE" 2>/dev/null || true
+if [ "$PROBE_AVAILABLE" -eq 1 ]; then
+  {
+    echo "pinning-probe=linux-parent-environ"
+    echo "pinning-probe-match-count=${PROBE_MATCH_COUNT}"
+  } >> "$ROOT/$CACHE" 2>/dev/null || true
 fi
 
 # --- actual validation: emit the drift diff (driver passes old/new temp files) ---
