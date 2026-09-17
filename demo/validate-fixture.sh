@@ -4,7 +4,7 @@ set -euo pipefail
 # Validate fixture/worktree consistency.
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 if [ "$#" -eq 0 ]; then
-  set -- state.txt
+  set -- ':/state.txt'
 fi
 
 cd "$ROOT_DIR"
