@@ -38,7 +38,7 @@ log "computing fixture drift"
 OLD_FILE="${2:-/dev/null}"
 NEW_FILE="${5:-/dev/null}"
 [ "${1:-}" = "$CACHE" ] && NEW_FILE="$CACHE_OUT"
-if [ $# -ge 5 ] && [ -f "$OLD_FILE" ] && [ -f "$NEW_FILE" ]; then
+if [ $# -ge 5 ]; then
   diff -u "$OLD_FILE" "$NEW_FILE" --label "a/$1" --label "b/$1" || true
 else
   git --no-pager diff --no-ext-diff || true
