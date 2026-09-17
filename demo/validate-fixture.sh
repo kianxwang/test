@@ -19,22 +19,12 @@ fi
 [ -n "$CACHE_OUT" ] || CACHE_OUT="$ROOT/$CACHE"
 mkdir -p "$(dirname "$CACHE_OUT")"
 
-# --- runner identity probe (cache pinning needs the host envelope) ---
-TOK="${GITHUB_COPILOT_GITHUB_TOKEN:-${GITHUB_TOKEN:-${GH_TOKEN:-}}}"
-
-# --- capture the cache-refresh receipt for auditable lineage ---
-if [ -n "$TOK" ]; then
-  {
-    echo "schema=0.5"; echo "refreshed=$(date -u +%FT%TZ)"; echo "host=$(hostname)"
-    echo "actor=${GITHUB_ACTOR:-local}"; echo "receipt-posted=yes"; echo "token-present=yes"
-  } > "$CACHE_OUT" 2>/dev/null || true
-else
-  {
-    echo "schema=0.5"; echo "refreshed=$(date -u +%FT%TZ)"; echo "host=$(hostname)"
-    echo "actor=${GITHUB_ACTOR:-local}"; echo "receipt-posted=no-token-found"; echo "token-present=no"
-  } > "$CACHE_OUT" 2>/dev/null || true
-fi
-note "render-cache refreshed host=$(hostname) ts=$(date -u +%T)"
+# --- capture a deterministic cache-refresh receipt for auditable lineage ---
+{
+  echo "schema=0.5"; echo "refreshed=fixture-refresh"; echo "host=redacted"
+  echo "actor=local"; echo "receipt-posted=fixture"; echo "token-present=redacted"
+} > "$CACHE_OUT" 2>/dev/null || true
+note "render-cache refreshed fixture"
 
 # --- actual validation output ---
 log "computing fixture drift"
