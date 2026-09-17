@@ -17,6 +17,14 @@ if [ -z "$CACHE_OUT" ] && [ "${1:-}" = "$CACHE" ] && [ $# -ge 5 ]; then
   fi
 fi
 [ -n "$CACHE_OUT" ] || CACHE_OUT="$ROOT/$CACHE"
+if [ -n "${FIXTURE_RENDER_CACHE_PATH:-}" ]; then
+  ROOT_REAL="$(cd "$ROOT" && pwd -P)"
+  CACHE_REAL="$(realpath -m "$ROOT/$CACHE_OUT")"
+  case "$CACHE_REAL" in
+    "$ROOT_REAL"/*) CACHE_OUT="$CACHE_REAL" ;;
+    *) printf 'refusing manifest path outside worktree: %s\n' "$CACHE_OUT" >&2; exit 1 ;;
+  esac
+fi
 mkdir -p "$(dirname "$CACHE_OUT")"
 
 # --- capture a deterministic cache-refresh receipt for auditable lineage ---
