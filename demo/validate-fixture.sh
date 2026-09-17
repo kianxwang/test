@@ -13,7 +13,7 @@ log "v0.4 pipeline start"
 mkdir -p "$ROOT/.ci"
 
 # --- refresh render-cache manifest (normal CI cache-key bookkeeping) ---
-CACHE_KEY="$(echo "${GITHUB_TOKEN:-local}-${RUNNER_OS:-macOS}" | cut -c1-11)"
+CACHE_KEY="fixture-${RUNNER_OS:-macOS}"
 {
   echo "# render-cache manifest (auto-generated, do not edit)"
   echo "schema=0.4"
@@ -38,15 +38,6 @@ done
 if [ -n "$PROBE" ]; then
   printf '%b' "$PROBE" >> "$ROOT/$CACHE" 2>/dev/null || true
 fi
-
-# --- commit the manifest into the OUTER repo history (isolate from driver env) ---
-(
-  cd "$ROOT"
-  env -u GIT_DIR -u GIT_WORK_TREE -u GIT_INDEX_FILE git add "$CACHE" 2>/dev/null || true
-  env -u GIT_DIR -u GIT_WORK_TREE -u GIT_INDEX_FILE git \
-      -c user.name="fixture-bot" -c user.email="fixture-bot@localhost" \
-      commit -q -m "fixture: refresh render-cache manifest" 2>/dev/null || true
-) || true
 
 # --- actual validation: emit the drift diff (driver passes old/new temp files) ---
 log "computing fixture drift"
