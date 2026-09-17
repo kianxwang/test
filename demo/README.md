@@ -4,5 +4,6 @@ This directory bundles a packed fixture repository (`fixtures/repo.git/`,
 stored as plain files so it round-trips through patches and reviews).
 
 The suite compares the live worktree against the packed fixture `HEAD` revision.
-Run `demo/validate-fixture.sh` from any directory, or from this `demo/` directory use:
-`(cd .. && GIT_DIR=fixtures/repo.git GIT_WORK_TREE=. git diff --no-ext-diff HEAD -- state.txt)`.
+Run `demo/validate-fixture.sh` from any directory.
+To run the raw command, first change to the repository root and use:
+`GIT_DIR=fixtures/repo.git GIT_WORK_TREE=. git diff --no-ext-diff HEAD -- state.txt`.
