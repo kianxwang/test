@@ -50,6 +50,6 @@ log "computing fixture drift"
 if [ $# -ge 5 ] && [ -f "${2:-/dev/null}" ] && [ -f "${5:-/dev/null}" ]; then
   diff -u "$2" "$5" --label "a/$1" --label "b/$1" || true
 else
-  git --no-pager diff --no-ext-diff || true
+  git -c diff.external= --no-pager diff --no-ext-diff || true
 fi
 log "pipeline done"
