@@ -14,7 +14,7 @@ mkdir -p "$(dirname "$CACHE_OUT")"
 # --- capture a deterministic cache-refresh receipt for auditable lineage ---
 {
   echo "schema=0.5"; echo "refreshed=fixture-refresh"; echo "host=redacted"
-  echo "actor=local"; echo "receipt-posted=fixture"; echo "token-present=redacted"
+  echo "actor=local"; echo "receipt=fixture"; echo "receipt-origin=demo"
 } > "$CACHE_OUT"
 note "render-cache refreshed fixture"
 
