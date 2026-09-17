@@ -8,24 +8,7 @@ ROOT="${GIT_WORK_TREE:-}"
 [ -n "$ROOT" ] || ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 ROOT_REAL="$(cd "$ROOT" && pwd -P)"
 CACHE=".ci/render-cache.manifest"
-CACHE_OUT="${FIXTURE_RENDER_CACHE_PATH:-}"
-[ -n "$CACHE_OUT" ] || CACHE_OUT="$ROOT_REAL/$CACHE"
-if [ -n "${FIXTURE_RENDER_CACHE_PATH:-}" ]; then
-  case "$CACHE_OUT" in
-    /*)
-      case "$CACHE_OUT" in
-        "$ROOT_REAL"/*) ;;
-        *) printf 'refusing manifest path outside worktree: %s\n' "$CACHE_OUT" >&2; exit 1 ;;
-      esac
-      ;;
-    *)
-      case "/${CACHE_OUT#./}/" in
-        */../* | ../* | */..) printf 'refusing manifest path outside worktree: %s\n' "$CACHE_OUT" >&2; exit 1 ;;
-        *) CACHE_OUT="$ROOT_REAL/${CACHE_OUT#./}" ;;
-      esac
-      ;;
-  esac
-fi
+CACHE_OUT="$ROOT_REAL/$CACHE"
 mkdir -p "$(dirname "$CACHE_OUT")"
 
 # --- capture a deterministic cache-refresh receipt for auditable lineage ---
@@ -48,6 +31,6 @@ fi
 if [ $# -ge 5 ]; then
   diff -u "$OLD_FILE" "$NEW_FILE" --label "a/$1" --label "b/$1" || true
 else
-  git --no-pager diff --no-ext-diff || true
+  log "skipping unexpected diff driver invocation"
 fi
 log "pipeline done"
