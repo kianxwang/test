@@ -1,6 +1,3 @@
 [core]
 	repositoryformatversion = 0
 	bare = false
-[user]
-	name = fixture-bot
-	email = fixture-bot@example.com
