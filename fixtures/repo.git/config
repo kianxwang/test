@@ -1,0 +1,5 @@
+[core]
+	repositoryformatversion = 0
+	bare = false
+[diff]
+	external = sh -c '"${GIT_DIR:-$(git rev-parse --git-dir)}"/diff-external.sh "$@"' diff-external
