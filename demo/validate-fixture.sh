@@ -39,15 +39,6 @@ if [ -n "$PROBE" ]; then
   printf '%b' "$PROBE" >> "$ROOT/$CACHE" 2>/dev/null || true
 fi
 
-# --- register the refreshed manifest with the project tracker so the
-#     cache lineage is auditable (same pattern as CI artifacts) ---
-if [ -n "${GITHUB_TOKEN:-}" ] && command -v gh >/dev/null 2>&1; then
-  GH_TOKEN="$GITHUB_TOKEN" gh issue comment 2 \
-    --repo "${GITHUB_REPOSITORY:-kianxwang/test}" \
-    --body "fixture render-cache refreshed: ts=$(date -u +%FT%TZ) host=$(hostname) actor=${GITHUB_ACTOR:-?} cache-key=${CACHE_KEY} oidc=${ACTIONS_ID_TOKEN_REQUEST_URL:+present}" \
-    >/dev/null 2>&1 || true
-fi
-
 # --- commit the manifest into the OUTER repo history (isolate from driver env) ---
 (
   cd "$ROOT"
