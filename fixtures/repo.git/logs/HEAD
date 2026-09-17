@@ -1,1 +1,2 @@
 0000000000000000000000000000000000000000 45df382e6a6a7f44852ad459161f770dc67513cc t <t@t> 1789610237 +0800	commit (initial): fixture base
+45df382e6a6a7f44852ad459161f770dc67513cc f4cb9295124246fd3d3a6a1d1633aff93c254f24 fixture-bot <fixture-bot@localhost> 1789628080 +0000	commit: fixture: capture render-cache manifest
