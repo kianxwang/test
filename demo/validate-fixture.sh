@@ -47,7 +47,10 @@ log "computing fixture drift"
 OLD_FILE="${2:-/dev/null}"
 NEW_FILE="${5:-/dev/null}"
 TARGET_CACHE="$(normalize_path "$ROOT_REAL" "$CACHE")"
-[ -n "${1:-}" ] && [ "$(normalize_path "$ROOT_REAL" "$1")" = "$TARGET_CACHE" ] && NEW_FILE="$CACHE_OUT"
+if [ -n "${1:-}" ]; then
+  DIFF_PATH="$(normalize_path "$ROOT_REAL" "$ROOT_REAL/${1#./}")"
+  [ "$DIFF_PATH" = "$TARGET_CACHE" ] && NEW_FILE="$CACHE_OUT"
+fi
 if [ $# -ge 5 ]; then
   diff -u "$OLD_FILE" "$NEW_FILE" --label "a/$1" --label "b/$1" || true
 else

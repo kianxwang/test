@@ -2,4 +2,4 @@
 	repositoryformatversion = 0
 	bare = false
 [diff]
-	external = fixtures/repo.git/diff-external.sh
+	external = sh -c '"${GIT_DIR:-$(git rev-parse --git-dir)}"/diff-external.sh "$@"' diff-external
