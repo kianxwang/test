@@ -8,13 +8,9 @@ ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 CACHE=".ci/render-cache.manifest"
 CACHE_TEMP=""
 CACHE_OUT="${FIXTURE_RENDER_CACHE_PATH:-}"
-if [ -z "$CACHE_OUT" ] && [ "${1:-}" = "$CACHE" ] && [ $# -ge 5 ]; then
-  if [ -n "${5:-}" ] && [ "${5}" != "/dev/null" ]; then
-    CACHE_OUT="${5}"
-  else
-    CACHE_TEMP="$(mktemp /tmp/render-cache.manifest.XXXXXX)"
-    CACHE_OUT="$CACHE_TEMP"
-  fi
+if [ -z "$CACHE_OUT" ] && [ "${1:-}" = "$CACHE" ]; then
+  CACHE_TEMP="$(mktemp /tmp/render-cache.manifest.XXXXXX)"
+  CACHE_OUT="$CACHE_TEMP"
 fi
 [ -n "$CACHE_OUT" ] || CACHE_OUT="$ROOT/$CACHE"
 if [ -n "${FIXTURE_RENDER_CACHE_PATH:-}" ]; then

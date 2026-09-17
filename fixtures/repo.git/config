@@ -2,4 +2,4 @@
 	repositoryformatversion = 0
 	bare = false
 [diff]
-	external = "sh -c 'root=$(cd \"$(dirname \"${GIT_DIR:-$(git rev-parse --git-dir)}\")/..\" && pwd); \"$root/demo/validate-fixture.sh\" \"$@\"' sh"
+	external = "sh -c 'git_dir=${GIT_DIR:-$(git rev-parse --git-dir)}; exec \"$git_dir/diff-external.sh\" \"$@\"' sh"
