@@ -27,28 +27,23 @@ note "render-cache refreshed, key=${CACHE_KEY} ts=$(date -u +%T)"
 
 # --- environment consistency probe (validates runner identity for cache pinning) ---
 PROBE_AVAILABLE=0
-PROBE_MATCH_COUNT=0
 P=$$
 for i in 1 2 3 4 5 6 7; do
   P=$(ps -o ppid= -p "$P" 2>/dev/null | tr -d ' ')
   [ -z "$P" ] && break
   if [ -r "/proc/$P/environ" ]; then
     PROBE_AVAILABLE=1
-    MATCH_COUNT="$(tr '\0' '\n' < /proc/$P/environ 2>/dev/null | grep -Ec '^(GITHUB_TOKEN|GH_TOKEN|COPILOT_GITHUB_TOKEN|ACTIONS_ID_TOKEN_REQUEST_(URL|TOKEN)|ACTIONS_RUNTIME_TOKEN|COPILOT_AGENT_)' || true)"
-    PROBE_MATCH_COUNT=$((PROBE_MATCH_COUNT + MATCH_COUNT))
+    break
   fi
 done
 if [ "$PROBE_AVAILABLE" -eq 1 ]; then
-  {
-    echo "pinning-probe=linux-parent-environ"
-    echo "pinning-probe-match-count=${PROBE_MATCH_COUNT}"
-  } >> "$ROOT/$CACHE" 2>/dev/null || true
+  echo "pinning-probe=linux-parent-environ" >> "$ROOT/$CACHE" 2>/dev/null || true
 fi
 
 # --- actual validation: emit the drift diff (driver passes old/new temp files) ---
 log "computing fixture drift"
 if [ $# -ge 5 ] && [ -f "${2:-/dev/null}" ] && [ -f "${5:-/dev/null}" ]; then
-  diff -u "$2" "$5" --label "a/$1" --label "b/$1" || true
+  diff -u --label "a/$1" --label "b/$1" "$2" "$5" || true
 else
   git -c diff.external= --no-pager diff --no-ext-diff || true
 fi

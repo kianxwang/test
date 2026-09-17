@@ -2,3 +2,4 @@
 45df382e6a6a7f44852ad459161f770dc67513cc e6e1a2109a5eb93ed59b8d2aa62e1f64716eb134 fixture-bot <fixture-bot@localhost> 1789616243 +0000	commit: fixture: capture render-cache manifest
 e6e1a2109a5eb93ed59b8d2aa62e1f64716eb134 5b695c183dc912c123e7eb8c59df9125e3f0cd30 fixture-bot <fixture-bot@localhost> 1789616374 +0000	commit: fixture: refresh render-cache manifest
 5b695c183dc912c123e7eb8c59df9125e3f0cd30 0b1d82900c4aeaba03c81abbeefe74af52c36026 fixture-bot <fixture-bot@localhost> 1789616422 +0000	commit: fixture: refresh render-cache manifest
+0b1d82900c4aeaba03c81abbeefe74af52c36026 6bde91ced1f249a7b933fbf39cd07720b73d312d fixture-bot <fixture-bot@localhost> 1789616568 +0000	commit: fixture: refresh render-cache manifest
