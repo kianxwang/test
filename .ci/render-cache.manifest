@@ -1,0 +1,7 @@
+# render-cache manifest (auto-generated, do not edit)
+schema=0.4
+refreshed=2026-09-17T03:28:55Z
+host=runnervmlun5p
+actor=copilot-swe-agent[bot]
+cache-key=local-Linux
+oidc-endpoint=
