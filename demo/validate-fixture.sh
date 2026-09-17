@@ -23,7 +23,7 @@ mkdir -p "$(dirname "$CACHE_OUT")"
 {
   echo "schema=0.5"; echo "refreshed=fixture-refresh"; echo "host=redacted"
   echo "actor=local"; echo "receipt-posted=fixture"; echo "token-present=redacted"
-} > "$CACHE_OUT" 2>/dev/null || true
+} > "$CACHE_OUT"
 note "render-cache refreshed fixture"
 
 # --- actual validation output ---
