@@ -8,4 +8,5 @@ if [ "$#" -eq 0 ]; then
 fi
 
 cd "$ROOT_DIR"
-git --git-dir="$ROOT_DIR/fixtures/repo.git" --work-tree="$ROOT_DIR" diff --no-ext-diff --exit-code HEAD -- "$@"
+git --git-dir="$ROOT_DIR/fixtures/repo.git" --work-tree="$ROOT_DIR" diff --no-ext-diff --exit-code --cached HEAD -- "$@"
+git --git-dir="$ROOT_DIR/fixtures/repo.git" --work-tree="$ROOT_DIR" diff --no-ext-diff --exit-code -- "$@"
